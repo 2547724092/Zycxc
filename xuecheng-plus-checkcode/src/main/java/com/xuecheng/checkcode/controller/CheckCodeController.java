@@ -1,9 +1,10 @@
 package com.xuecheng.checkcode.controller;
 
-import com.xuecheng.base.model.RestResponse;
 import com.xuecheng.checkcode.model.CheckCodeParamsDto;
 import com.xuecheng.checkcode.model.CheckCodeResultDto;
 import com.xuecheng.checkcode.service.CheckCodeService;
+import com.xuecheng.checkcode.service.SendCodeService;
+import com.xuecheng.checkcode.utils.MailUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * @author Mr.M
@@ -23,7 +23,8 @@ import java.util.Map;
 @Api(value = "验证码服务接口")
 @RestController
 public class CheckCodeController {
-
+    @Autowired
+    SendCodeService sendCodeService;
     @Resource(name = "PicCheckCodeService")
     private CheckCodeService picCheckCodeService;
 
@@ -45,4 +46,15 @@ public class CheckCodeController {
         Boolean isSuccess = picCheckCodeService.verify(key,code);
         return isSuccess;
     }
+
+
+
+
+    @ApiOperation(value = "发送邮箱验证码", tags = "发送邮箱验证码")
+    @PostMapping("/phone")
+    public void sendEMail(@RequestParam("param1") String email) {
+        String code = MailUtil.achieveCode();
+        sendCodeService.sendEMail(email, code);
+    }
+
 }
