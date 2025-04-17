@@ -61,7 +61,7 @@ public class PayTestController {
     }
 
 
-    @PostMapping("/paynotify")
+    @PostMapping("/paynotify2")
     public void paynotify(HttpServletRequest request,HttpServletResponse response) throws IOException, AlipayApiException {
         Map<String,String> params = new HashMap<String,String>();
         Map requestParams = request.getParameterMap();
@@ -119,6 +119,7 @@ public class PayTestController {
                 //注意：
                 //如果签约的是可退款协议，那么付款完成后，支付宝系统发送该交易状态通知。
             }
+
             response.getWriter().write("success");
         }else{
             response.getWriter().write("fail");

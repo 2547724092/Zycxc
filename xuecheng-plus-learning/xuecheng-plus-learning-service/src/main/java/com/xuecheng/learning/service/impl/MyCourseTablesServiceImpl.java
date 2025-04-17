@@ -59,13 +59,20 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
             //添加免费课程
             chooseCourse  = addFreeCoruse(userId, coursepublish);
             //添加到我的课程表
-            XcCourseTables xcCourseTables = addCourseTabls(chooseCourse);
+            XcCourseTables xcCourseTables = addCourseTables(chooseCourse);
         }else{
             //添加收费课程
-            chooseCourse  = addChargeCoruse(userId, coursepublish);
+            chooseCourse  = addChargeCourse(userId, coursepublish);
         }
         //获取学习资格
-        return null;
+
+        // 4. 获取学生的学习资格
+        XcCourseTablesDto courseTablesDto = getLearningStatus(userId, courseId);
+        // 5. 封装返回值
+        XcChooseCourseDto chooseCourseDto = new XcChooseCourseDto();
+        BeanUtils.copyProperties(chooseCourse, chooseCourseDto);
+        chooseCourseDto.setLearnStatus(courseTablesDto.learnStatus);
+        return chooseCourseDto;
     }
 
 
@@ -108,7 +115,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
     //添加收费课程
 
     //添加收费课程
-    public XcChooseCourse addChargeCoruse(String userId,CoursePublish coursepublish){
+    public XcChooseCourse addChargeCourse(String userId,CoursePublish coursepublish){
 
         //如果存在待支付记录直接返回
         LambdaQueryWrapper<XcChooseCourse> queryWrapper = new LambdaQueryWrapper<>();
@@ -117,6 +124,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
                 .eq(XcChooseCourse::getOrderType, "700002")//收费订单
                 .eq(XcChooseCourse::getStatus, "701002");//待支付
         List<XcChooseCourse> xcChooseCourses = xcChooseCourseMapper.selectList(queryWrapper);
+        System.out.println("具体内容：" + xcChooseCourses);
         if (xcChooseCourses != null && xcChooseCourses.size()>0) {
             return xcChooseCourses.get(0);
         }
@@ -145,7 +153,8 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
      * @author Mr.M
      * @date 2022/10/3 11:24
      */
-    public XcCourseTables addCourseTabls(XcChooseCourse xcChooseCourse){
+
+    public XcCourseTables addCourseTables(XcChooseCourse xcChooseCourse){
         //选课记录完成且未过期可以添加课程到课程表
         String status = xcChooseCourse.getStatus();
         if (!"701001".equals(status)){

@@ -61,7 +61,7 @@ public class MailUtil {
         InternetAddress to = new InternetAddress(email);
         message.setRecipient(RecipientType.TO, to);
         // 设置邮件标题
-        message.setSubject("Kyle's Blog 邮件测试");
+        message.setSubject("ZYC在线课堂系统正在进行找回密码 邮件测试");
         // 设置邮件的内容体
         message.setContent("尊敬的用户:你好!\n注册验证码为:" + code + "(有效期为一分钟,请勿告知他人)", "text/html;charset=UTF-8");
         // 最后当然就是发送邮件啦
