@@ -3,6 +3,7 @@ package com.xuecheng.content.api;
 import com.xuecheng.content.model.dto.BindTeachplanMediaDto;
 import com.xuecheng.content.model.dto.SaveTeachplanDto;
 import com.xuecheng.content.model.dto.TeachplanDto;
+import com.xuecheng.content.model.po.TeachplanMedia;
 import com.xuecheng.content.service.TeachplanService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -59,5 +60,9 @@ public class TeachplanController {
     public void unassociationMedia(@PathVariable Long teachPlanId, @PathVariable String mediaId) {
         teachplanService.unassociationMedia(teachPlanId, mediaId);
     }
-
+    @ApiOperation("课程计划查询")
+    @PostMapping("/teachplan/{teachplanId}")
+    public TeachplanMedia getTeachplan(@PathVariable Long teachplanId) {
+        return teachplanService.getTeachplan(teachplanId);
+    }
 }

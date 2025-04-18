@@ -42,5 +42,7 @@ public interface TeachplanService {
   * @param mediaId           媒资信息id
   */
  void unassociationMedia(Long teachPlanId, String mediaId);
+
+    TeachplanMedia getTeachplan(Long teachplanId);
 }
 

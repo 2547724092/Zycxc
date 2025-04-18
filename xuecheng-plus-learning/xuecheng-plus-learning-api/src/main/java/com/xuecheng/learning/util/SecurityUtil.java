@@ -18,23 +18,22 @@ import java.time.LocalDateTime;
 public class SecurityUtil {
 
     public static XcUser getUser() {
-        //拿jwt中的用户身份
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof String){
-            String jsonString = (String) principal;
-            XcUser xcUser = null;
-            try {
-                xcUser = JSON.parseObject(jsonString, XcUser.class);
-            } catch (Exception e) {
-                log.debug("解析jwt中的用户身份无法转成XcUser对象:{}",jsonString);
+        try {
+            Object principalObj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (principalObj instanceof String) {
+                //取出用户身份信息
+                String principal = principalObj.toString();
+                //将json转成对象
+                XcUser user = JSON.parseObject(principal, XcUser.class);
+                return user;
             }
-            return xcUser;
-
+        } catch (Exception e) {
+            log.error("获取当前登录用户身份出错:{}", e.getMessage());
+            e.printStackTrace();
         }
+
         return null;
     }
-
 
 
     @Data
